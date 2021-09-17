@@ -42,7 +42,7 @@ public class XlassLoader extends ClassLoader{
             inputStream.read(byteArray, 0, byteArray.length);
             return decode(byteArray);
         }  finally {
-            close(inputStream);
+            inputStream.close();
         }
     }
 
@@ -52,15 +52,5 @@ public class XlassLoader extends ClassLoader{
             targetArray[i] = (byte) (255 - byteArray[i]);
         }
         return targetArray;
-    }
-
-    private static void close(Closeable res) {
-        if (null != res) {
-            try {
-                res.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }
