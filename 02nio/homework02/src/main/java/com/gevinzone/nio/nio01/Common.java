@@ -23,7 +23,8 @@ public class Common {
 
     public static void sleep() {
         try {
-            TimeUnit.MILLISECONDS.sleep(20);
+//            TimeUnit.MILLISECONDS.sleep(20);
+            TimeUnit.NANOSECONDS.sleep(10);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
