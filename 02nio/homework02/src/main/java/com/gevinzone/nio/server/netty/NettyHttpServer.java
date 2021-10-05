@@ -1,4 +1,4 @@
-package com.gevinzone.nio.nio01.netty;
+package com.gevinzone.nio.server.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;

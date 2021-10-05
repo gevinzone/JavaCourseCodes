@@ -1,4 +1,4 @@
-package com.gevinzone.nio.nio01;
+package com.gevinzone.nio.client;
 
 import okhttp3.Headers;
 import okhttp3.OkHttpClient;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class Client {
+public class OKHttpClient {
     public static void main(String... args) {
         Map<String, String> serviceMap = new HashMap<>();
         serviceMap.put("1", "http://127.0.0.1:8801");

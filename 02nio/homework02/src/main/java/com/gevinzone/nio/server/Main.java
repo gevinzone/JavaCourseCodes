@@ -1,6 +1,6 @@
-package com.gevinzone.nio.nio01;
+package com.gevinzone.nio.server;
 
-import com.gevinzone.nio.nio01.netty.NettyHttpServer;
+import com.gevinzone.nio.server.netty.NettyHttpServer;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

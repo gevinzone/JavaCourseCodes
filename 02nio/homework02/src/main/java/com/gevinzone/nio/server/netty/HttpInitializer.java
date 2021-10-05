@@ -1,4 +1,4 @@
-package com.gevinzone.nio.nio01.netty;
+package com.gevinzone.nio.server.netty;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;

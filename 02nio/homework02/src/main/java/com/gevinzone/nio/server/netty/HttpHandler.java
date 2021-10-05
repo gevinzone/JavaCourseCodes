@@ -1,6 +1,5 @@
-package com.gevinzone.nio.nio01.netty;
+package com.gevinzone.nio.server.netty;
 
-import com.gevinzone.nio.nio01.Common;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -57,7 +56,7 @@ public class HttpHandler extends ChannelInboundHandlerAdapter{
             response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(body.getBytes(StandardCharsets.UTF_8)));
             response.headers().set("Content-Type", "application/json");
             response.headers().setInt("Content-Length", response.content().readableBytes());
-            TimeUnit.MILLISECONDS.sleep(20);
+//            TimeUnit.MILLISECONDS.sleep(20);
 
         } catch (Exception e) {
             System.out.println("处理出错:"+e.getMessage());

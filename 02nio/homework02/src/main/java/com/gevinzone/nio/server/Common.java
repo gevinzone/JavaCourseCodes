@@ -1,4 +1,4 @@
-package com.gevinzone.nio.nio01;
+package com.gevinzone.nio.server;
 
 import java.io.PrintWriter;
 import java.net.Socket;
