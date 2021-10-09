@@ -1,19 +1,22 @@
 package com.gevinzone.homework04;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 
 /**
  * 使用Fork join 框架
  */
 public class Method9 {
+    private static final ForkJoinPool forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
     public static void main(String[] args) {
 
         long start=System.currentTimeMillis();
 
         int input = 36;
         ConcurrentHashMap<Integer, Integer> cache = new ConcurrentHashMap<>(50);
-        int result = new Fibonacci(input, cache).compute();
+//        int result = new Fibonacci(input, cache).compute();
+        int result = forkJoinPool.invoke(new Fibonacci(input, cache));
 
         System.out.println("异步计算结果为："+result);
 
