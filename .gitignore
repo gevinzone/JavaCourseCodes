@@ -68,6 +68,12 @@ hs_err_pid*
 
 ### Intellij ###
 .idea
+*.iws
+*.iml
+*.ipr
+.mvn
+mvnw
+mvnw.cmd
 
 
 

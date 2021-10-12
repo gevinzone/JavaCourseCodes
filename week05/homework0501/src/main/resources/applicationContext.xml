@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd ">
+    <bean name="student03" class="com.gevinzone.homework0501.bo.Student">
+        <property name="id" value="3"/>
+        <property name="name" value="Student03"/>
+    </bean>
+    <bean name="student04" class="com.gevinzone.homework0501.bo.Student">
+        <property name="id" value="4"/>
+        <property name="name" value="Student04"/>
+    </bean>
+    <bean id="class2" class="com.gevinzone.homework0501.bo.Klass">
+        <property name="name" value="Class2"/>
+        <property name="students">
+            <list>
+                <ref bean="student03"/>
+                <ref bean="student04"/>
+                <bean id="student05" class="com.gevinzone.homework0501.bo.Student">
+                    <property name="id" value="5"/>
+                    <property name="name" value="Student05"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+    <context:component-scan base-package="com.gevinzone.homework0501"/>
+</beans>
