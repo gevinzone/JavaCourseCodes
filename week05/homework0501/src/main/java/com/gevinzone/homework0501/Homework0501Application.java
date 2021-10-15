@@ -1,15 +1,19 @@
 package com.gevinzone.homework0501;
 
+import com.gevinzone.homework0501.aop.ObjectProxy;
 import com.gevinzone.homework0501.bo.Klass;
 import com.gevinzone.homework0501.bo.School;
 import com.gevinzone.homework0501.bo.Student;
+import com.gevinzone.homework0501.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.ImportResource;
 
 @Slf4j
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 @SpringBootApplication
 @ImportResource("classpath:applicationContext.xml")
 public class Homework0501Application {
@@ -47,6 +51,29 @@ public class Homework0501Application {
         log.info(s101.toString());
         Student s102 = (Student) context.getBean("student102");
         log.info(s102.toString());
+
+        log.info("<=========== AOP ============> ");
+
+        log.info("******AOP by dynamic proxy******");
+        ObjectProxy proxy = new ObjectProxy();
+        IMeetingService meetingService = context.getBean(MeetingServiceImpl.class);
+        meetingService = (IMeetingService) proxy.createProxy(meetingService);
+
+        meetingService.startMeeting();
+        meetingService.finishMeeting();
+
+
+        log.info("******AOP default******");
+        IHomeworkService homeworkService = (IHomeworkService) context.getBean(HomeworkServiceImpl.class);
+        homeworkService.assignHomework();
+        homeworkService.checkHomework();
+
+
+        log.info("******AOP by cglib******");
+        StudyService studyService = context.getBean(StudyService.class);
+        studyService.learn();
+        studyService.review();
+
     }
 
 }
