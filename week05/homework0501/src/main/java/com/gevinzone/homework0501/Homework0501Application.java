@@ -56,7 +56,7 @@ public class Homework0501Application {
 
         log.info("******AOP by dynamic proxy******");
         ObjectProxy proxy = new ObjectProxy();
-        IMeetingService meetingService = context.getBean(MeetingServiceImpl.class);
+        IMeetingService meetingService = (IMeetingService)context.getBean("meetingService");
         meetingService = (IMeetingService) proxy.createProxy(meetingService);
 
         meetingService.startMeeting();

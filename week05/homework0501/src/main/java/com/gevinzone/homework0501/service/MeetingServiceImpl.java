@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service
+@Service(value = "meetingService")
 public class MeetingServiceImpl implements IMeetingService {
     @Override
     public void startMeeting() {
