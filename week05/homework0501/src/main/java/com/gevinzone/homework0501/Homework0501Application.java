@@ -62,9 +62,16 @@ public class Homework0501Application {
         meetingService.startMeeting();
         meetingService.finishMeeting();
 
+        log.info("******AOP by dynamic proxy2******");
+
+        meetingService = (IMeetingService)context.getBean("proxiedMeetingService");
+
+        meetingService.startMeeting();
+        meetingService.finishMeeting();
+
 
         log.info("******AOP default******");
-        IHomeworkService homeworkService = (IHomeworkService) context.getBean(HomeworkServiceImpl.class);
+        IHomeworkService homeworkService = context.getBean(HomeworkServiceImpl.class);
         homeworkService.assignHomework();
         homeworkService.checkHomework();
 
