@@ -61,6 +61,7 @@ hs_err_pid*
 
 # End of https://www.toptal.com/developers/gitignore/api/java
 
+target/
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/intellij
