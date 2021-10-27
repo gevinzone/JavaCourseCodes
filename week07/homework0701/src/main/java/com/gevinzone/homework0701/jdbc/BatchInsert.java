@@ -14,6 +14,11 @@ public class BatchInsert {
     @Autowired
     private DataSource dataSource;
 
+    /**
+     * method1: fast
+     * @param count
+     * @param prefix
+     */
     public void insertUsers(int count, String prefix) {
         String sql = insertUserSql();
         Date now = new Date();
@@ -21,7 +26,6 @@ public class BatchInsert {
         try(Connection connection = dataSource.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement(sql)) {
                 for (int i = 1; i <= count; i++) {
-
                     setObject(statement, prefix, i, now);
                     statement.addBatch();
                     if (i % 50000 == 0 || i == count) {
@@ -37,6 +41,11 @@ public class BatchInsert {
 
     }
 
+    /**
+     * method2: much slower than method1
+     * @param count
+     * @param prefix
+     */
     public void insertUsers2(int count, String prefix) {
         String sql = insertUserSql();
         Date now = new Date();
@@ -48,6 +57,34 @@ public class BatchInsert {
                     statement.execute();
                 }
             }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+
+    }
+
+    /**
+     * method3: faster than method1
+     * @param count
+     * @param prefix
+     */
+    public void insertUsers3(int count, String prefix) {
+        String sql = insertUserSql();
+        Date now = new Date();
+        prefix = validatedPrefix(prefix);
+        try(Connection connection = dataSource.getConnection()) {
+            connection.setAutoCommit(false);
+            try(PreparedStatement statement = connection.prepareStatement(sql)) {
+                for (int i = 1; i <= count; i++) {
+                    setObject(statement, prefix, i, now);
+                    statement.addBatch();
+                    if (i % 50000 == 0 || i == count) {
+                        statement.executeBatch();
+                        statement.clearBatch();
+                    }
+                }
+            }
+            connection.commit();
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
