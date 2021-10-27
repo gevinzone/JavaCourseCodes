@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/gevin-db?useSSL=false&rewriteBatchedStatements=true
+    username: gevin
+    password: gevin
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
