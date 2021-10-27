@@ -4,4 +4,7 @@ spring:
     username: gevin
     password: gevin
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
