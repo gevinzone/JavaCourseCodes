@@ -12,7 +12,7 @@ public class CmdRunner {
 //        basic.insertUser();
         BatchInsert batchInsert = context.getBean(BatchInsert.class);
         int count = 1_000_000;
-        String prefix = "B-";
+        String prefix = "A-";
         long start=System.currentTimeMillis();
         batchInsert.insertUsers(count, prefix);
         System.out.println("使用时间："+ (System.currentTimeMillis()-start)/1000 + " s");
