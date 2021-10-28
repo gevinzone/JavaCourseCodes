@@ -1,10 +1,10 @@
 package com.gevinzone.homework0701.mybatis.mapper;
 
 import com.gevinzone.homework0701.mybatis.entity.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import com.gevinzone.homework0701.mybatis.mapper.sql.UserSqlBuilder;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -14,4 +14,7 @@ public interface UserMapper {
 
     @Select("SELECT * FROM `user` WHERE id=#{id}")
     User getUser(@Param("id") long id);
+
+    @InsertProvider(type = UserSqlBuilder.class, method = "insertUsers")
+    Integer insertUsers(@Param("users") List<User> users);
 }

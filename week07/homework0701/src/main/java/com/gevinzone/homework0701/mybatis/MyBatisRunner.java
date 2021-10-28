@@ -13,7 +13,8 @@ public class MyBatisRunner {
         int total = 1_000_000;
         String prefix = "M-";
         long start=System.currentTimeMillis();
-        myBatisBatchInsert.batchInsertUser(total, prefix);
+//        myBatisBatchInsert.batchInsertUser(total, prefix);
+        myBatisBatchInsert.insertMultiUsers(total, prefix);
         System.out.println("使用时间："+ (System.currentTimeMillis()-start)/1000 + " s");
     }
 }

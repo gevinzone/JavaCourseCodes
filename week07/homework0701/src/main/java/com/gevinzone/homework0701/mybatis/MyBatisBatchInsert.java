@@ -20,10 +20,11 @@ public class MyBatisBatchInsert {
     SqlSessionFactory sqlSessionFactory;
 
     /*
-        This does not work as expect
-        @Autowired
-        UserMapper userMapper;
+        This does not work as expect for batch query,
+        but it can work with multiple value insertion
      */
+    @Autowired
+    UserMapper defaultUserMapper;
 
     public void batchInsertUser(int total, String prefix) {
         int batchSize = 50_000;
@@ -48,6 +49,21 @@ public class MyBatisBatchInsert {
         sqlSession.close();
     }
 
+    public void insertMultiUsers(int total, String prefix) {
+        int batchSize = 50_000;
+        Date now = new Date();
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+        prefix = prefix == null ? "user" : prefix + "user";
+        for (int i = 0; i < total; i += batchSize) {
+            int batch = Math.min(total - i, batchSize);
+            List<User> users = createUserList(i, batch, prefix, now);
+            userMapper.insertUsers(users);
+            // it works, too
+            // defaultUserMapper.insertUsers(users);
+        }
+    }
+
     private void batchInsertUser(SqlSession sqlSession, UserMapper userMapper, List<User> userList) {
         for (User user : userList) {
             userMapper.insertUser(user);
@@ -63,6 +79,7 @@ public class MyBatisBatchInsert {
             user.setPassword("password");
             user.setNickname("nickname");
             user.setSalt("salt");
+            user.setIdNumber("479894105789734");
             user.setCreateTime(date);
             user.setUpdateTime(date);
             userMapper.insertUser(user);
@@ -79,6 +96,7 @@ public class MyBatisBatchInsert {
                     .password("password")
                     .nickname("nickname")
                     .salt("salt")
+                    .idNumber("479894105789734")
                     .createTime(date)
                     .updateTime(date)
                     .build());
