@@ -11,10 +11,13 @@ public class MyBatisRunner {
         ApplicationContext context = SpringApplication.run(Homework0701Application.class, args);
         MyBatisBatchInsert myBatisBatchInsert = context.getBean(MyBatisBatchInsert.class);
         int total = 1_000_000;
-        String prefix = "M-";
+//        String prefix = "M-";
         long start=System.currentTimeMillis();
-//        myBatisBatchInsert.batchInsertUser(total, prefix);
-        myBatisBatchInsert.insertMultiUsers(total, prefix);
+////        myBatisBatchInsert.batchInsertUser(total, prefix);
+//        myBatisBatchInsert.insertMultiUsers(total, prefix);
+        myBatisBatchInsert.insertOrdersBatch(total);
         System.out.println("使用时间："+ (System.currentTimeMillis()-start)/1000 + " s");
+
+//        myBatisBatchInsert.insertOrder();
     }
 }

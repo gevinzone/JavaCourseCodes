@@ -13,7 +13,7 @@ public class SnowflakeIdGenerator {
 
     private final int workerIdBits = 5;
     private final int datacenterIdBits = 5;
-    private final int sequenceBits = 12;
+    private final int sequenceBits = 15;
 
     private final long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;
 
