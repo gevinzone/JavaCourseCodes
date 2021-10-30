@@ -38,7 +38,7 @@ public class DynamicDataSourceConfig {
 
     @Bean
     @Primary
-    public DataSource dataSource(DataSource masterDataSource, DataSource slaveDataSource)  {
+    public DynamicDataSource dataSource(DataSource masterDataSource, DataSource slaveDataSource)  {
         Map<Object, Object> targetDataSources = new HashMap<>(5);
         targetDataSources.put(DataSourceEnum.MASTER, masterDataSource);
         targetDataSources.put(DataSourceEnum.SLAVE, slaveDataSource);

@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -17,6 +18,8 @@ import java.lang.reflect.Method;
 @Component
 @Slf4j
 public class DataSourceAspect {
+    @Autowired
+    DynamicDataSource dataSource;
     @Pointcut("@annotation(com.gevinzone.homework0702.annotation.CurDataSource)")
     public void dataSourcePointcut() {
 
@@ -26,14 +29,14 @@ public class DataSourceAspect {
     public Object around(ProceedingJoinPoint point) throws Throwable {
         MethodSignature signature = (MethodSignature) point.getSignature();
         Method method = signature.getMethod();
-        CurDataSource dataSource = method.getAnnotation(CurDataSource.class);
-        DataSourceEnum dataSourceName = dataSource.value() == null ? DataSourceEnum.MASTER : dataSource.value();
-        DynamicDataSource.setDataSource(dataSourceName);
+        CurDataSource dataSourceAnnotation = method.getAnnotation(CurDataSource.class);
+        DataSourceEnum dataSourceName = dataSourceAnnotation.value() == null ? DataSourceEnum.MASTER : dataSourceAnnotation.value();
+        dataSource.setDataSource(dataSourceName);
         log.info("get datasource: {}", dataSourceName);
         try {
             return point.proceed();
         } finally {
-            DynamicDataSource.clearDataSource();
+            dataSource.clearDataSource();
         }
     }
 }

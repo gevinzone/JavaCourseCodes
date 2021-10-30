@@ -14,26 +14,26 @@ public class UserCrud {
     @Autowired
     private UserMapper mapper;
 
+    public void insertUserDefault() {
+        mapper.insertUser(createUser());
+    }
+
     @CurDataSource
-    public void createUser() {
-        mapper.insertUser(User.builder()
-                .username(String.valueOf(System.currentTimeMillis()))
-                .password("password")
-                .nickname("nickname")
-                .salt("salt")
-                .idNumber("479894105789734")
-                .createTime(new Date())
-                .updateTime(new Date()).build());
+    public void insertUser() {
+        mapper.insertUser(createUser());
     }
     @CurDataSource(value = DataSourceEnum.SLAVE)
-    public void createUser2() {
-        mapper.insertUser(User.builder()
+    public void insertUser2() {
+        mapper.insertUser(createUser());
+    }
+    private User createUser() {
+        return User.builder()
                 .username(String.valueOf(System.currentTimeMillis()))
                 .password("password")
                 .nickname("nickname")
                 .salt("salt")
                 .idNumber("479894105789734")
                 .createTime(new Date())
-                .updateTime(new Date()).build());
+                .updateTime(new Date()).build();
     }
 }

@@ -6,7 +6,7 @@ import javax.sql.DataSource;
 import java.util.Map;
 
 public class DynamicDataSource extends AbstractRoutingDataSource {
-    private static final ThreadLocal<DataSourceEnum> content_holder = new ThreadLocal<>();
+    private final ThreadLocal<DataSourceEnum> content_holder = new ThreadLocal<>();
     public DynamicDataSource(DataSource defaultDataSource, Map<Object, Object> targetDataSources) {
         super.setDefaultTargetDataSource(defaultDataSource);
         super.setTargetDataSources(targetDataSources);
@@ -17,15 +17,15 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         return getDataSource();
     }
 
-    public static void setDataSource(DataSourceEnum dataSource) {
+    public void setDataSource(DataSourceEnum dataSource) {
         content_holder.set(dataSource);
     }
 
-    public static DataSourceEnum getDataSource() {
+    public DataSourceEnum getDataSource() {
         return content_holder.get();
     }
 
-    public static void clearDataSource() {
+    public void clearDataSource() {
         content_holder.remove();
     }
 }

@@ -12,9 +12,11 @@ public class AppRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        System.out.println("Create user default: \n");
+        userCrud.insertUserDefault();
         System.out.println("Create user1: \n");
-        userCrud.createUser();
+        userCrud.insertUser();
         System.out.println("Create user2: \n");
-        userCrud.createUser2();
+        userCrud.insertUser2();
     }
 }
