@@ -1,0 +1,37 @@
+spring:
+  shardingsphere:
+    datasource:
+      names: master,slave0,slave1
+      master:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/ds_master?useSSL=false&rewriteBatchedStatements=true
+        username: gevin
+        password: gevin
+      slave0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/ds_slave0?useSSL=false&rewriteBatchedStatements=true
+        username: gevin
+        password: gevin
+      slave1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/ds_slave1?useSSL=false&rewriteBatchedStatements=true
+        username: gevin
+        password: gevin
+    masterslave:
+      load-balance-algorithm-type: round_robin
+      name: ms
+      master-data-source-name: master
+      slave-data-source-names:
+        - slave0
+        - slave1
+    props:
+      sql.show: true
+
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
