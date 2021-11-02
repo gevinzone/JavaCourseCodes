@@ -1,0 +1,22 @@
+version: '3'
+services:
+  mysql8:
+    # restart: always
+    image: mysql:8.0.25
+    volumes:
+      - gevin-mysql:/mysql8
+    environment:
+      - MYSQL_DATABASE=gevin-db
+      - MYSQL_ROOT_PASSWORD=root+1234
+      - MYSQL_USER=gevin
+      - MYSQL_PASSWORD=gevin
+    ports:
+      - "3306:3306"
+    networks:
+      - dbnet
+
+
+volumes:
+  gevin-mysql:
+networks:
+  dbnet:

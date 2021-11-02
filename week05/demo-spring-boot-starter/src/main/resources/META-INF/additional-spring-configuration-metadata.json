@@ -1,0 +1,14 @@
+{
+  "groups": [
+    {
+      "name": "com.gevinzone.demo",
+      "type": "com.gevinzone.demospringbootstarter.DemoAutoConfiguration"
+    }
+  ],
+  "properties": [
+    {
+      "name": "gevinzone.demo.message",
+      "type": "java.lang.String",
+      "description": "Description for gevinzone.demo.message."
+  }
+] }

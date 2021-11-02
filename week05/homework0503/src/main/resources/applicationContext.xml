@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd ">
+    <bean id="student201" class="com.gevinzone.bo.Student">
+        <property name="id" value="201" />
+        <property name="name" value="student201" />
+    </bean>
+    <bean id="student202" class="com.gevinzone.bo.Student">
+        <property name="id" value="202" />
+        <property name="name" value="student202" />
+    </bean>
+    <bean name="class2" class="com.gevinzone.bo.Klass">
+        <property name="name" value="class2" />
+        <property name="squadLeader" ref="student201"/>
+        <property name="students">
+            <list>
+                <ref bean="student201"/>
+                <ref bean="student202"/>
+            </list>
+        </property>
+    </bean>
+    <context:component-scan base-package="com.gevinzone.config" />
+    <bean name="class3" class="com.gevinzone.bo.Klass">
+        <property name="name" value="class3" />
+        <property name="squadLeader" ref="student1"/>
+        <property name="students">
+            <list>
+                <ref bean="student1" />
+                <ref bean="student201"/>
+                <ref bean="student202"/>
+            </list>
+        </property>
+    </bean>
+    <bean name="school2" class="com.gevinzone.bo.School" />
+    <bean name="class6" class="com.gevinzone.bo.Klass">
+        <property name="name" value="class6" />
+        <property name="squadLeader" ref="student201"/>
+        <property name="students">
+            <list>
+                <ref bean="student1" />
+                <ref bean="student2"/>
+                <ref bean="student301"/>
+                <ref bean="student302"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>

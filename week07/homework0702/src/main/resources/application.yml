@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    master:
+      url: jdbc:mysql://localhost:3307/gevin-db?useSSL=false&rewriteBatchedStatements=true
+      username: gevin
+      password: gevin
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    slave:
+      url: jdbc:mysql://localhost:3308/gevin-db?useSSL=false&rewriteBatchedStatements=true
+      username: gevin
+      password: gevin
+      driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
