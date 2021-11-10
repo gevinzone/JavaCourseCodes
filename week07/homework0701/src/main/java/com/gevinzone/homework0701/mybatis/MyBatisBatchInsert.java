@@ -41,11 +41,25 @@ public class MyBatisBatchInsert {
         UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
         for (int i = 0; i < total; i+= batchSize) {
             int batch = Math.min(total - i, batchSize);
-//            List<User> users = createUserList(i, batch, prefix, now);
-//            batchInsertUser(sqlSession, userMapper, users);
-            batchInsertUser(sqlSession, userMapper, prefix, now, i, batch);
+            List<User> users = createUserList(i, batch, prefix, now);
+            batchInsertUser(sqlSession, userMapper, users);
+//            batchInsertUser(sqlSession, userMapper, prefix, now, i, batch);
         }
         sqlSession.close();
+    }
+
+    public void batchInsertUserMultiThread(int total, String prefix) throws InterruptedException {
+        int batchSize = 100_000;
+        Date now = new Date();
+        for (int i = 0; i < total; i+= batchSize) {
+            int batch = Math.min(total - i, batchSize);
+            int start = i;
+            SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH);
+            UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+            Thread thread = new Thread(() -> batchInsertUserTask(sqlSession, userMapper, prefix, now, start, batch));
+            thread.start();
+            thread.join();
+        }
     }
 
     public void batchInsertUser2(int total, String prefix) {
@@ -93,6 +107,11 @@ public class MyBatisBatchInsert {
             userMapper.insertUser(user);
         }
         sqlSession.commit();
+    }
+
+    private void batchInsertUserTask(SqlSession sqlSession, UserMapper userMapper, String prefix, Date date, int start, int size) {
+        batchInsertUser(sqlSession, userMapper, prefix, date, start, size);
+        sqlSession.close();
     }
 
     private List<User> createUserList(int start, int size, String prefix, Date date) {
