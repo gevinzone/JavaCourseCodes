@@ -1,0 +1,36 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: us-bank-service
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/bank-us?useSSL=false&rewriteBatchedStatements=true
+    username: root
+    password: root+1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+
+dubbo:
+  scan:
+    base-packages: com.gevinzone.usbank
+  protocol:
+    name: dubbo
+    port: 12347
+  registry:
+    address: zookeeper://localhost:2181
+  metadata-report:
+    address: zookeeper://localhost:2181
+  application:
+    qosEnable: true
+    qosPort: 22222
+    qosAcceptForeignIp: true
+    qos-enable-compatible: true
+    qos-host-compatible: localhost
+    qos-port-compatible: 22222
+    qos-accept-foreign-ip-compatible: true
+    qos-host: localhost
