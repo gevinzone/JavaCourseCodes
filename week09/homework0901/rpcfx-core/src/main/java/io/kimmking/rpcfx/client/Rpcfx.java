@@ -74,14 +74,9 @@ public final class Rpcfx {
         // 1.可以复用client
         // 2.尝试使用httpclient或者netty client
         URI uri = new URI(url);
-        NettyHttpClient client = new NettyHttpClient();
+//        NettyHttpClient client = new NettyHttpClient();
+        NettyHttpClient client = NettyHttpClient.getDefaultClient();
         String respJson = client.post(uri, reqJson);
-//        OkHttpClient client = new OkHttpClient();
-//        final Request request = new Request.Builder()
-//                .url(url)
-//                .post(RequestBody.create(JSONTYPE, reqJson))
-//                .build();
-//        String respJson = client.newCall(request).execute().body().string();
         System.out.println("resp json: "+respJson);
         return JSON.parseObject(respJson, RpcfxResponse.class);
     }

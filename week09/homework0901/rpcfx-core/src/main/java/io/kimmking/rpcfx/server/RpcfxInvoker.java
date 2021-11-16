@@ -43,8 +43,11 @@ public class RpcfxInvoker implements ApplicationContextAware {
 
             // 2.封装一个统一的RpcfxException
             // 客户端也需要判断异常
-            e.printStackTrace();
-            response.setException(e);
+//            e.printStackTrace();
+//            response.setException(e);
+            RpcfxException exception = new RpcfxException(e.getMessage(), e.getCause());
+            exception.printStackTrace();
+            response.setException(exception);
             response.setStatus(false);
             return response;
         }
