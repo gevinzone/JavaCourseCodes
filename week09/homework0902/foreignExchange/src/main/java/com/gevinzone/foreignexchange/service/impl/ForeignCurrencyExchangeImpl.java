@@ -8,6 +8,7 @@ import com.gevinzone.remittancecontract.service.remittanceFromService;
 import com.gevinzone.remittancecontract.service.remittanceToService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.dromara.hmily.annotation.Hmily;
 import org.dromara.hmily.annotation.HmilyTCC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,12 @@ public class ForeignCurrencyExchangeImpl implements ForeignCurrencyExchange {
          */
         AccountTransferDetail detail = createAccountTransferDetail(Const.cnAccountPrefix+fromId, Const.usAccountPrefix+toId,
                 usAmount.multiply(new BigDecimal(7)), usAmount);
-        foreignCurrencyExchange.tryTransferFromCnToUs(detail);
+//        detail.setId(1); // already created in db
+        try {
+            foreignCurrencyExchange.tryTransferFromCnToUs(detail);
+        } catch (Exception exception) {
+            log.info("exception occurs, roll back with tcc");
+        }
     }
 
 
@@ -71,7 +77,7 @@ public class ForeignCurrencyExchangeImpl implements ForeignCurrencyExchange {
         log.info("start transfer...");
         fromService.startPayMoney(detail);
         toService.startReceiveMoney(detail);
-//        fromService.testMethod("hello, test");
+//        throw new RuntimeException("test exception"); // Test cancel when throw exception
     }
 
 
@@ -79,17 +85,19 @@ public class ForeignCurrencyExchangeImpl implements ForeignCurrencyExchange {
         log.info("complete transfer...");
         fromService.completePayMoney(detail);
         toService.completeReceiveMoney(detail);
-        updateAccountTransferDetailStatus(1);
+        detail.setStatus(1);
+        updateAccountTransferDetailStatus(detail);
     }
 
     public void cancelTransferFromCnToUs(AccountTransferDetail detail) {
         log.info("cancel transfer...");
         fromService.cancelPayMoney(detail);
         toService.cancelReceiveMoney(detail);
-        updateAccountTransferDetailStatus(2);
+        detail.setStatus(2);
+        updateAccountTransferDetailStatus(detail);
     }
 
-    private void updateAccountTransferDetailStatus(int status) {
-
+    private void updateAccountTransferDetailStatus(AccountTransferDetail detail) {
+        accountTransferDetailMapper.updateAccountTransferDetailStatus(detail);
     }
 }
