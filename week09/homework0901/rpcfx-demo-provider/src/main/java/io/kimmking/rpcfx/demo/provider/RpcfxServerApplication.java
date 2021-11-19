@@ -31,19 +31,19 @@ public class RpcfxServerApplication {
 
 	public static void main(String[] args) throws Exception {
 
-		// start zk client
-		RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
-		CuratorFramework client = CuratorFrameworkFactory.builder().connectString("localhost:2181").namespace("rpcfx").retryPolicy(retryPolicy).build();
-		client.start();
-
-
-		// register service
-		// xxx "io.kimmking.rpcfx.demo.api.UserService"
-
-		String userService = "io.kimmking.rpcfx.demo.api.UserService";
-		registerService(client, userService);
-		String orderService = "io.kimmking.rpcfx.demo.api.OrderService";
-		registerService(client, orderService);
+//		// start zk client
+//		RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
+//		CuratorFramework client = CuratorFrameworkFactory.builder().connectString("localhost:2181").namespace("rpcfx").retryPolicy(retryPolicy).build();
+//		client.start();
+//
+//
+//		// register service
+//		// xxx "io.kimmking.rpcfx.demo.api.UserService"
+//
+//		String userService = "io.kimmking.rpcfx.demo.api.UserService";
+//		registerService(client, userService);
+//		String orderService = "io.kimmking.rpcfx.demo.api.OrderService";
+//		registerService(client, orderService);
 
 
 		// 进一步的优化，是在spring加载完成后，从里面拿到特定注解的bean，自动注册到zk
@@ -51,23 +51,23 @@ public class RpcfxServerApplication {
 		SpringApplication.run(RpcfxServerApplication.class, args);
 	}
 
-	private static void registerService(CuratorFramework client, String service) throws Exception {
-		ServiceProviderDesc userServiceDesc = ServiceProviderDesc.builder()
-				.host(InetAddress.getLocalHost().getHostAddress())
-				.port(8080).serviceClass(service).build();
-		// String userServiceSescJson = JSON.toJSONString(userServiceSesc);
-
-		try {
-			if ( null == client.checkExists().forPath("/" + service)) {
-				client.create().withMode(CreateMode.PERSISTENT).forPath("/" + service, "service".getBytes());
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		client.create().withMode(CreateMode.EPHEMERAL).
-				forPath( "/" + service + "/" + userServiceDesc.getHost() + "_" + userServiceDesc.getPort(), "provider".getBytes());
-	}
+//	private static void registerService(CuratorFramework client, String service) throws Exception {
+//		ServiceProviderDesc userServiceDesc = ServiceProviderDesc.builder()
+//				.host(InetAddress.getLocalHost().getHostAddress())
+//				.port(8080).serviceClass(service).build();
+//		// String userServiceSescJson = JSON.toJSONString(userServiceSesc);
+//
+//		try {
+//			if ( null == client.checkExists().forPath("/" + service)) {
+//				client.create().withMode(CreateMode.PERSISTENT).forPath("/" + service, "service".getBytes());
+//			}
+//		} catch (Exception ex) {
+//			ex.printStackTrace();
+//		}
+//
+//		client.create().withMode(CreateMode.EPHEMERAL).
+//				forPath( "/" + service + "/" + userServiceDesc.getHost() + "_" + userServiceDesc.getPort(), "provider".getBytes());
+//	}
 
 	@Autowired
 	RpcfxInvoker invoker;
@@ -75,6 +75,14 @@ public class RpcfxServerApplication {
 	@PostMapping("/")
 	public RpcfxResponse invoke(@RequestBody RpcfxRequest request) {
 		return invoker.invoke(request);
+	}
+
+	@Bean
+	CuratorFramework createZkClient() {
+		RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
+		CuratorFramework client = CuratorFrameworkFactory.builder().connectString("localhost:2181").namespace("rpcfx").retryPolicy(retryPolicy).build();
+		client.start();
+		return client;
 	}
 
 	@Bean
