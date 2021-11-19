@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class RpcfxClientApplication {
@@ -23,12 +24,14 @@ public class RpcfxClientApplication {
 	// nexus, userserivce -> userdao -> user
 	//
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 
 		// UserService service = new xxx();
 		// service.findById
 
-		UserService userService = Rpcfx.create(UserService.class, "http://localhost:8080/");
+//		UserService userService = Rpcfx.create(UserService.class, "http://localhost:8080/");
+		UserService userService = Rpcfx.createFromRegistry(UserService.class, "localhost:2181",
+				new TagRouter(), new RandomLoadBalancer(), new CuicuiFilter());
 		User user = userService.findById(1);
 		System.out.println("find user id=1 from server: " + user.getName());
 
@@ -45,7 +48,8 @@ public class RpcfxClientApplication {
 	private static class TagRouter implements Router {
 		@Override
 		public List<String> route(List<String> urls) {
-			return urls;
+			return urls.stream().map((s) -> "http://" +String.join(":", s.split("_")) ).collect(Collectors.toList());
+//			return urls;
 		}
 	}
 

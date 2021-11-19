@@ -10,12 +10,17 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import org.apache.curator.RetryPolicy;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class Rpcfx {
 
@@ -23,13 +28,20 @@ public final class Rpcfx {
         ParserConfig.getGlobalInstance().addAccept("io.kimmking");
     }
 
-    public static <T, filters> T createFromRegistry(final Class<T> serviceClass, final String zkUrl, Router router, LoadBalancer loadBalance, Filter filter) {
+    public static <T, filters> T createFromRegistry(final Class<T> serviceClass, final String zkUrl, Router router, LoadBalancer loadBalance, Filter filter) throws Exception {
 
         // 加filte之一
 
         // curator Provider list from zk
-        List<String> invokers = new ArrayList<>();
+//        List<String> invokers = new ArrayList<>();
         // 1. 简单：从zk拿到服务提供的列表
+        RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
+        CuratorFramework client = CuratorFrameworkFactory.builder().connectString(zkUrl).namespace("rpcfx").retryPolicy(retryPolicy).build();
+        client.start();
+
+        String path = "/" + serviceClass.getName();
+        List<String> invokers = new ArrayList<>(client.getChildren().forPath(path));
+
         // 2. 挑战：监听zk的临时节点，根据事件更新这个list（注意，需要做个全局map保持每个服务的提供者List）
 
         List<String> urls = router.route(invokers);
