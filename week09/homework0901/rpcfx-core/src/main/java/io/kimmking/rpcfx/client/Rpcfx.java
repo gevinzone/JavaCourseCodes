@@ -6,6 +6,7 @@ import com.alibaba.fastjson.parser.ParserConfig;
 import io.kimmking.rpcfx.api.*;
 import io.kimmking.rpcfx.client.nettyclient.NettyHttpClient;
 import io.netty.channel.ChannelFuture;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -13,20 +14,29 @@ import okhttp3.RequestBody;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.recipes.cache.CuratorCache;
+import org.apache.curator.framework.recipes.cache.PathChildrenCache;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 public final class Rpcfx {
 
     static {
         ParserConfig.getGlobalInstance().addAccept("io.kimmking");
     }
+
+    static Map<String, Map<String, Object>> proxyMap = new HashMap<>();
 
     public static <T, filters> T createFromRegistry(final Class<T> serviceClass, final String zkUrl, Router router, LoadBalancer loadBalance, Filter filter) throws Exception {
 
@@ -50,6 +60,49 @@ public final class Rpcfx {
 
         return (T) create(serviceClass, url, filter);
 
+    }
+
+    public static <T, filters> T createFromRegistryWatched(final Class<T> serviceClass, final String zkUrl, Router router, LoadBalancer loadBalance, Filter filter) throws Exception {
+        RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
+        CuratorFramework client = CuratorFrameworkFactory.builder().connectString(zkUrl).namespace("rpcfx").retryPolicy(retryPolicy).build();
+        client.start();
+
+        String path = "/" + serviceClass.getName();
+
+        // 2. 挑战：监听zk的临时节点，根据事件更新这个list（注意，需要做个全局map保持每个服务的提供者List）
+        PathChildrenCache pathChildrenCache = new PathChildrenCache(client, path, true);
+        pathChildrenCache.getListenable().addListener((zkClient, event) -> {
+            if (!event.getType().equals(PathChildrenCacheEvent.Type.CHILD_ADDED)
+                    && !event.getType().equals(PathChildrenCacheEvent.Type.CHILD_REMOVED)) {
+                return;
+            }
+            log.info("!!!!!" + event.getType().toString() + "!!!!!");
+            List<String> invokers = new ArrayList<>(zkClient.getChildren().forPath(path));
+            List<String> urls = router.route(invokers);
+            String url = loadBalance.select(urls);
+            if (proxyMap.containsKey(zkUrl) && proxyMap.get(zkUrl).containsKey(serviceClass.getName())) {
+                log.info("**********update client*************");
+                proxyMap.get(zkUrl).put(serviceClass.getName(), create(serviceClass, url, filter));
+            }
+        });
+        pathChildrenCache.start();
+
+
+        List<String> invokers = new ArrayList<>(client.getChildren().forPath(path));
+        List<String> urls = router.route(invokers);
+        String url = loadBalance.select(urls);
+
+        return (T) create(serviceClass, url, filter);
+
+    }
+
+    public static <T> T getOrRegister(final Class<T> serviceClass, final String zkUrl, Router router, LoadBalancer loadBalance, Filter filter) throws Exception {
+        if (proxyMap.containsKey(zkUrl) && proxyMap.get(zkUrl).containsKey(serviceClass.getName())) {
+            return (T) proxyMap.get(zkUrl).get(serviceClass.getName());
+        }
+        proxyMap.putIfAbsent(zkUrl, new HashMap<>());
+        proxyMap.get(zkUrl).put(serviceClass.getName(), createFromRegistryWatched(serviceClass, zkUrl, router, loadBalance, filter));
+        return (T) proxyMap.get(zkUrl).get(serviceClass.getName());
     }
 
     public static <T> T create(final Class<T> serviceClass, final String url, Filter... filters) {

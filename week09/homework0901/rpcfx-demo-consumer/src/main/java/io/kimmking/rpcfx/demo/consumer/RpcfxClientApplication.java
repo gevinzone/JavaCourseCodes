@@ -40,7 +40,9 @@ public class RpcfxClientApplication {
 //		System.out.println(String.format("find order name=%s, amount=%f",order.getName(),order.getAmount()));
 //
 //		//
-//		UserService userService2 = Rpcfx.createFromRegistry(UserService.class, "localhost:2181", new TagRouter(), new RandomLoadBalancer(), new CuicuiFilter());
+		OrderService orderService = Rpcfx.getOrRegister(OrderService.class, "localhost:2181", new TagRouter(), new RandomLoadBalancer(), new CuicuiFilter());
+		Order order = orderService.findOrderById(1992129);
+		System.out.printf("find order name=%s, amount=%f%n",order.getName(),order.getAmount());
 
 //		SpringApplication.run(RpcfxClientApplication.class, args);
 	}
@@ -56,7 +58,7 @@ public class RpcfxClientApplication {
 	private static class RandomLoadBalancer implements LoadBalancer {
 		@Override
 		public String select(List<String> urls) {
-			return urls.get(0);
+			return urls.get(urls.size() - 1);
 		}
 	}
 
