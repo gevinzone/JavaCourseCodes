@@ -1,0 +1,80 @@
+spring:
+  shardingsphere:
+    datasource:
+      names: ds-0, ds-1
+      ds-0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/ds_0?serverTimezone=UTC&useSSL=false&rewriteBatchedStatements=true
+        username: root
+        password: root+1234
+      ds-1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/ds_1?serverTimezone=UTC&useSSL=false&rewriteBatchedStatements=true
+        username: root
+        password: root+1234
+
+    props:
+      sql.show: true
+
+    rules:
+      sharding:
+        tables:
+          t_order:
+            actualDataNodes: ds-${0..1}.order_${0..7}
+            tableStrategy:
+              standard:
+                shardingColumn: id
+                shardingAlgorithmName: t-order-inline
+            keyGenerateStrategy:
+              column: id
+              keyGeneratorName: snowflake
+          t_order_item:
+            actualDataNodes: ds-${0..1}.order_item_${0..7}
+            tableStrategy:
+              standard:
+                shardingColumn: order_id
+                shardingAlgorithmName: t-order-item-inline
+            keyGenerateStrategy:
+              column: id
+              keyGeneratorName: snowflake
+          t_user:
+            actualDataNodes: ds-${0..1}.user
+            keyGenerateStrategy:
+              column: user_id
+              keyGeneratorName: snowflake
+        binding-tables:
+          - t_order,t_order_item,t_user
+        default-database-strategy:
+          standard:
+            sharding-column: user_id
+            sharding-algorithm-name: database-inline
+#        default-table-strategy:
+
+        sharding-algorithms:
+          database-inline:
+            type: INLINE
+            props:
+              algorithm-expression: ds-$->{user_id % 2}
+          t-order-inline:
+            type: INLINE
+            props:
+              algorithm-expression: order_$->{id % 8}
+          t-order-item-inline:
+            type: INLINE
+            props:
+              algorithm-expression: order_item_$->{order_id % 8}
+
+        keyGenerators:
+          snowflake:
+            type: SNOWFLAKE
+            props:
+              worker-id: 123
+
+
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
