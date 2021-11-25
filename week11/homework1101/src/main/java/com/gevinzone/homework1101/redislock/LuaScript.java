@@ -1,4 +1,4 @@
-package com.gevinzone.homework1101;
+package com.gevinzone.homework1101.redislock;
 
 public class LuaScript {
     public static final String releaseLock = "" +

@@ -1,4 +1,4 @@
-package com.gevinzone.homework1101;
+package com.gevinzone.homework1101.business;
 
 import java.util.HashMap;
 

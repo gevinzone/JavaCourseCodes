@@ -1,6 +1,6 @@
 package com.gevinzone.homework1101.lettuce;
 
-import com.gevinzone.homework1101.IRedisWarehouseOpt;
+import com.gevinzone.homework1101.business.IRedisWarehouseOpt;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisHashCommands;

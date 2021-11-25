@@ -1,7 +1,7 @@
 package com.gevinzone.homework1101.lettuce;
 
-import com.gevinzone.homework1101.ConcurrentService;
-import com.gevinzone.homework1101.WarehouseService;
+import com.gevinzone.homework1101.business.ConcurrentService;
+import com.gevinzone.homework1101.business.WarehouseService;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.sync.RedisHashCommands;
@@ -12,8 +12,8 @@ public class LettuceDemo {
     public static void main(String[] args) {
         RedisClient client = RedisClient.create("redis://localhost:6379");
 
-//        lettuceOpt(client);
-//        useLock(client);
+        lettuceOpt(client);
+        useLock(client);
         changeStock(client);
     }
 

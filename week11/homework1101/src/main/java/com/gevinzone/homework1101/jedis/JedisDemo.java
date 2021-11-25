@@ -1,6 +1,6 @@
 package com.gevinzone.homework1101.jedis;
 
-import com.gevinzone.homework1101.ConcurrentService;
+import com.gevinzone.homework1101.business.ConcurrentService;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;

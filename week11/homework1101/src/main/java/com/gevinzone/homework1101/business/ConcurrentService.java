@@ -1,4 +1,6 @@
-package com.gevinzone.homework1101;
+package com.gevinzone.homework1101.business;
+
+import com.gevinzone.homework1101.redislock.IRedisLock;
 
 public class ConcurrentService {
     private int count = 0;

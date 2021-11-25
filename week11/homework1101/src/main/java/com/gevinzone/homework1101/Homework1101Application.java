@@ -1,21 +1,23 @@
 package com.gevinzone.homework1101;
 
-import com.gevinzone.homework1101.lettuce.LettuceLock;
-import com.gevinzone.homework1101.lettuce.LettuceWarehouseOps;
+import com.gevinzone.homework1101.business.ConcurrentService;
+import com.gevinzone.homework1101.business.WarehouseService;
 import com.gevinzone.homework1101.redistemplate.TemplateLock;
 import com.gevinzone.homework1101.redistemplate.TemplateWarehouseOps;
-import io.lettuce.core.RedisClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
-
-import java.util.HashMap;
 
 @SpringBootApplication
 public class Homework1101Application {
+    @Bean
+    public LettuceConnectionFactory redisConnectionFactory() {
+        return new LettuceConnectionFactory();
+    }
+
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(Homework1101Application.class, args);
         StringRedisTemplate template = context.getBean(StringRedisTemplate.class);

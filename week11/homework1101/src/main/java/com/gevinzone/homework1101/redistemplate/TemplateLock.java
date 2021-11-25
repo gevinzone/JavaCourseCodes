@@ -1,11 +1,10 @@
 package com.gevinzone.homework1101.redistemplate;
 
-import com.gevinzone.homework1101.IRedisLock;
-import com.gevinzone.homework1101.LuaScript;
+import com.gevinzone.homework1101.redislock.IRedisLock;
+import com.gevinzone.homework1101.redislock.LuaScript;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;

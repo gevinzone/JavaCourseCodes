@@ -1,6 +1,6 @@
 package com.gevinzone.homework1101.jedis;
 
-import com.gevinzone.homework1101.IRedisLock;
+import com.gevinzone.homework1101.redislock.IRedisLock;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.params.SetParams;
 

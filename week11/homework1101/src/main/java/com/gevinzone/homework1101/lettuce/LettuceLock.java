@@ -1,15 +1,11 @@
 package com.gevinzone.homework1101.lettuce;
 
-import com.gevinzone.homework1101.IRedisLock;
-import com.gevinzone.homework1101.LuaScript;
+import com.gevinzone.homework1101.redislock.IRedisLock;
+import com.gevinzone.homework1101.redislock.LuaScript;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.ScriptOutputType;
 import io.lettuce.core.SetArgs;
 import io.lettuce.core.api.StatefulRedisConnection;
-import io.lettuce.core.api.async.RedisAsyncCommands;
-import io.lettuce.core.api.async.RedisStringAsyncCommands;
-import io.lettuce.core.api.reactive.RedisReactiveCommands;
-import io.lettuce.core.api.reactive.RedisStringReactiveCommands;
 import io.lettuce.core.api.sync.RedisScriptingCommands;
 import io.lettuce.core.api.sync.RedisStringCommands;
 
