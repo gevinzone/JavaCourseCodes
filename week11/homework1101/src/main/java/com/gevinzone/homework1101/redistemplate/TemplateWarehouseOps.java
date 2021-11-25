@@ -13,13 +13,13 @@ public class TemplateWarehouseOps implements IRedisWarehouseOpt {
     StringRedisTemplate template;
 
     @Override
-    public void increaseHashValue(String key, String field, long delta) {
-        template.opsForHash().increment(key, field, delta);
+    public Long increaseHashValue(String key, String field, long delta) {
+        return template.opsForHash().increment(key, field, delta);
     }
 
     @Override
-    public void decreaseHashValue(String key, String field, long delta) {
-        template.opsForHash().increment(key, field, -delta);
+    public Long decreaseHashValue(String key, String field, long delta) {
+        return template.opsForHash().increment(key, field, -delta);
     }
 
     @Override

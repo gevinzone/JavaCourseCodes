@@ -15,16 +15,16 @@ public class LettuceWarehouseOps implements IRedisWarehouseOpt {
     }
 
     @Override
-    public void increaseHashValue(String key, String field, long delta) {
+    public Long increaseHashValue(String key, String field, long delta) {
         try(StatefulRedisConnection<String, String> connection = client.connect()) {
             RedisHashCommands<String, String> hashCommands = connection.sync();
-            hashCommands.hincrby(key, field, delta);
+            return hashCommands.hincrby(key, field, delta);
         }
     }
 
     @Override
-    public void decreaseHashValue(String key, String field, long delta) {
-        increaseHashValue(key, field, -delta);
+    public Long decreaseHashValue(String key, String field, long delta) {
+        return increaseHashValue(key, field, -delta);
     }
 
     @Override

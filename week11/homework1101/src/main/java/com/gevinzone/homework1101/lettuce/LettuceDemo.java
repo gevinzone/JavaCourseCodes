@@ -46,6 +46,6 @@ public class LettuceDemo {
         WarehouseService service = new WarehouseService(dataOps, initStock);
         int stockLeft = service.multiThreadDecreaseStock(threads, delta);
         System.out.println("********************************");
-        System.out.printf("stock left: %s, equals %s? %s \n", stockLeft, expected, stockLeft==50);
+        System.out.printf("stock left: %s, equals %s? %s \n", stockLeft, expected, stockLeft==expected);
     }
 }

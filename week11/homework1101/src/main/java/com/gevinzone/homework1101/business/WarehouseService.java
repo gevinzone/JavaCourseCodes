@@ -1,9 +1,11 @@
 package com.gevinzone.homework1101.business;
 
-import com.gevinzone.homework1101.business.IRedisWarehouseOpt;
+
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 
+@Slf4j
 public class WarehouseService {
     private final IRedisWarehouseOpt warehouseOpt;
     private final HashMap<String, String> goods = new HashMap<>(4);
@@ -22,8 +24,26 @@ public class WarehouseService {
 
     public int multiThreadDecreaseStock(int threads, long delta) {
         for (int i = 0; i < threads; i++) {
+            new Thread(() -> warehouseOpt.decreaseHashValue("1", "stock", delta)).start();
+        }
+        sleep(2000);
+        goods.put("stock", warehouseOpt.getHashMapValue("1", "stock"));
+        return Integer.parseInt(goods.get("stock"));
+    }
+
+    public int multiThreadDecreaseStock2(int threads, long delta) {
+        for (int i = 0; i < threads; i++) {
             new Thread(() -> {
-                warehouseOpt.decreaseHashValue("1", "stock", delta);
+                int left = Integer.parseInt(goods.get("stock"));
+                if (left < delta) {
+                    log.info("return");
+                    return;
+                }
+                Long result = warehouseOpt.decreaseHashValue("1", "stock", delta);
+                if (result < 0) {
+                    log.info("cancel");
+                    warehouseOpt.increaseHashValue("1", "stock", delta);
+                }
             }).start();
         }
         sleep(2000);
