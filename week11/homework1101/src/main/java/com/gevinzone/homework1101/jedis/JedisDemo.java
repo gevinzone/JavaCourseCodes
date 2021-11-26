@@ -38,7 +38,8 @@ public class JedisDemo {
     private static void useLock(Jedis jedis) {
         ConcurrentService service = new ConcurrentService(new JedisLock(jedis));
         int threads = 1;
-        // threads > 1 会报错
+        // 由于线程不安全，threads > 1 会报错
+        // 在多服务实例情况下使用时，每个服务内还要单独上锁来锁线程应用
         int result = service.multiThreadAdd(threads);
         System.out.println(result);
         System.out.print(result == threads);
