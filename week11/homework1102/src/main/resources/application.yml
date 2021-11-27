@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    username: gevin
+    password: gevin
+    url: jdbc:mysql://localhost:3306/gevin-db?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  cache:
+    type: redis
+  redis:
+    lettuce:
+      pool:
+        max-active: 16
+        max-wait: 10ms
+    host: localhost
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+#    type-aliases-package: io.kimmking.cache.entity
