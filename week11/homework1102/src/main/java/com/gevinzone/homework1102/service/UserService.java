@@ -10,4 +10,11 @@ public interface UserService {
 
     List<User> list();
 
+    User updateIgnoreCache(User user, int id);
+
+    User update(User user, int id);
+
+    void clearAllCache();
+
+    void clearCache(int id);
 }

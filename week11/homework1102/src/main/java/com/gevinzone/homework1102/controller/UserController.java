@@ -3,8 +3,7 @@ package com.gevinzone.homework1102.controller;
 import com.gevinzone.homework1102.entity.User;
 import com.gevinzone.homework1102.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -13,16 +12,28 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @RequestMapping("/user/find")
+    @GetMapping("/user/detail")
     User find(Integer id) {
         return userService.find(id);
-        //return new User(1,"KK", 28);
     }
 
     @RequestMapping("/user/list")
     List<User> list() {
         return userService.list();
-//        return Arrays.asList(new User(1,"KK", 28),
-//                             new User(2,"CC", 18));
+    }
+
+    @PutMapping("/user/detail")
+    User updateUserIgnoreCache(@RequestBody User user, @RequestParam(required = false, defaultValue = "0") boolean ignore) {
+        return ignore ? userService.updateIgnoreCache(user, user.getId()) : userService.update(user, user.getId());
+    }
+
+    @DeleteMapping("/user/list")
+    void clearAllCache() {
+        userService.clearAllCache();
+    }
+
+    @DeleteMapping("/user/detail")
+    void clearCache(int id) {
+        userService.clearCache(id);
     }
 }
