@@ -1,0 +1,15 @@
+spring:
+  kafka:
+    bootstrap-servers:
+      - 127.0.0.1:9001
+      - 127.0.0.1:9002
+      - 127.0.0.1:9003
+    template:
+      default-topic: gevin-topic
+    consumer:
+      group-id: gevin-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
