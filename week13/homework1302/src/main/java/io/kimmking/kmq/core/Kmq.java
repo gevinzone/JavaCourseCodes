@@ -43,8 +43,8 @@ public final class Kmq {
                 while (consumerOffset == producerOffset) {
                     wait();
                 }
-                KmqMessage message = queue[consumerOffset];
                 consumerOffset = (consumerOffset + 1) % capacity;
+                KmqMessage message = queue[consumerOffset];
                 notifyAll();
                 return message;
             } catch (InterruptedException e) {
@@ -67,8 +67,8 @@ public final class Kmq {
                 if (consumerOffset == producerOffset) {
                     return null;
                 }
-                KmqMessage message = queue[consumerOffset];
                 consumerOffset = (consumerOffset + 1) % capacity;
+                KmqMessage message = queue[consumerOffset];
                 notifyAll();
                 return message;
             } catch (InterruptedException e) {
